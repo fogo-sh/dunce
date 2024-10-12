@@ -1,9 +1,16 @@
-FROM golang:1.23-bullseye
+FROM golang:1.23-bookworm AS builder
 
 WORKDIR /build
-COPY . .
-RUN go mod download &&\
-    go mod verify &&\
-    go build
 
-ENTRYPOINT ["/build/dunce"]
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN CGO_ENABLED=0 go build
+
+FROM gcr.io/distroless/static AS bot
+
+WORKDIR /bot
+COPY --from=builder /build/dunce /bot/dunce
+
+ENTRYPOINT ["/bot/dunce"]
