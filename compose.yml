@@ -1,0 +1,9 @@
+services:
+  dunc:
+    image: ghcr.io/fogo-sh/dunce
+    environment:
+      - DUNCE_DB_PATH=/data/dunce.sqlite
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data

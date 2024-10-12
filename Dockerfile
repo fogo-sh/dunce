@@ -6,4 +6,4 @@ RUN go mod download &&\
     go mod verify &&\
     go build
 
-ENTRYPOINT ["/build/scribe"]
+ENTRYPOINT ["/build/dunce"]

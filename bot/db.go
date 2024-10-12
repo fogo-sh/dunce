@@ -1,4 +1,4 @@
-package main
+package bot
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ func DbCommand(_ *discordgo.Session, interaction *discordgo.InteractionCreate, a
 		Data: &discordgo.InteractionResponseData{
 			Files: []*discordgo.File{
 				{
-					Name:        "quotes.sqlite",
+					Name:        "dunce.sqlite",
 					ContentType: "application/x-sqlite3",
 					Reader:      dbFile,
 				},
