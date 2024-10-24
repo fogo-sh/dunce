@@ -13,8 +13,8 @@ import (
 
 var dbStepCmd = &cobra.Command{
 	Use: "step [number of steps]",
-	Example: `  Downgrade by one version: netenvelope db step -- -1
-  Upgrade by 3 versions: netenvelope db step 3`,
+	Example: `  Downgrade by one version: dunce db step -- -1
+  Upgrade by 3 versions: dunce db step 3`,
 	Short: "Perform a relative migration",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
