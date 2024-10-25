@@ -1,28 +1,18 @@
 package database
 
 import (
-	"errors"
-	"fmt"
+	"database/sql"
 
-	"github.com/glebarez/sqlite"
-	"gorm.io/gorm"
+	_ "modernc.org/sqlite"
+
+	"github.com/fogo-sh/dunce/database/queries"
 )
 
-var Instance *gorm.DB
-
-func Initialize(connectionString string) error {
-	newInstance, err := gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
+func New(path string) (*queries.Queries, error) {
+	db, err := sql.Open("sqlite", path)
 	if err != nil {
-		return fmt.Errorf("error opening db connection: %w", err)
-	}
-	Instance = newInstance
-	return nil
-}
-
-func Migrate() {
-	if Instance == nil {
-		panic(errors.New("Attempted to migrate uninstantiated database - ensure you call database.Initialize before making any database calls"))
+		return nil, err
 	}
 
-	Instance.AutoMigrate(&User{})
+	return queries.New(db), nil
 }

@@ -2,16 +2,16 @@ package bot
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
-	"github.com/kelseyhightower/envconfig"
 	"pkg.nit.so/switchboard"
 
 	"github.com/fogo-sh/dunce/database"
+	"github.com/fogo-sh/dunce/database/queries"
 )
 
 type Config struct {
@@ -24,19 +24,19 @@ type Config struct {
 var config Config
 var Bot *discordgo.Session
 
-func Run() error {
-	err := godotenv.Load()
+var db *queries.Queries
+
+func Run(inputConfig Config) error {
+	config = inputConfig
+
+	slog.Info("Initializing Dunce...")
+
+	dbInstance, err := database.New(config.DBPath)
 	if err != nil {
-		fmt.Printf("Failed to load .env file: %s\n", err.Error())
+		return fmt.Errorf("error opening database: %w", err)
 	}
 
-	err = envconfig.Process("dunce", &config)
-	if err != nil {
-		return fmt.Errorf("error loading config: %s", err)
-	}
-
-	database.Initialize(config.DBPath)
-	database.Migrate()
+	db = dbInstance
 
 	Bot, err = discordgo.New(fmt.Sprintf("Bot %s", config.Token))
 	if err != nil {
@@ -56,11 +56,11 @@ func Run() error {
 		return fmt.Errorf("error opening Discord connection: %w", err)
 	}
 
-	fmt.Println("Dunce is now running. Press Ctrl-C to exit.")
+	slog.Info("Dunce is now running. Press Ctrl-C to exit.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
-	fmt.Println("Quitting Dunce")
+	slog.Info("Quitting Dunce")
 
 	if err = Bot.Close(); err != nil {
 		return fmt.Errorf("error closing Discord connection: %w", err)

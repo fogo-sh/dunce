@@ -1,16 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"log/slog"
 	"os"
 
-	"github.com/fogo-sh/dunce/bot"
+	"github.com/fogo-sh/dunce/cmd"
 )
 
 func main() {
-	err := bot.Run()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error running Dunce: %s\n", err)
-		os.Exit(1)
-	}
+	handler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	})
+
+	slog.SetDefault(slog.New(handler))
+
+	cmd.Execute()
 }
