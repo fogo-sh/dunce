@@ -1,2 +1,2 @@
 -- name: GetAllUsers :many
-SELECT id FROM user;
+SELECT id, discord_snowflake FROM user;

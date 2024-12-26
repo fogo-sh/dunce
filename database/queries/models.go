@@ -4,6 +4,11 @@
 
 package queries
 
+import (
+	"database/sql"
+)
+
 type User struct {
-	ID int64
+	ID               int64
+	DiscordSnowflake sql.NullString
 }

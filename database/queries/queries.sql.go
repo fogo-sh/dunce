@@ -10,22 +10,22 @@ import (
 )
 
 const getAllUsers = `-- name: GetAllUsers :many
-SELECT id FROM user
+SELECT id, discord_snowflake FROM user
 `
 
-func (q *Queries) GetAllUsers(ctx context.Context) ([]int64, error) {
+func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
 	rows, err := q.db.QueryContext(ctx, getAllUsers)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []int64
+	var items []User
 	for rows.Next() {
-		var id int64
-		if err := rows.Scan(&id); err != nil {
+		var i User
+		if err := rows.Scan(&i.ID, &i.DiscordSnowflake); err != nil {
 			return nil, err
 		}
-		items = append(items, id)
+		items = append(items, i)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err
