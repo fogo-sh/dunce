@@ -20,13 +20,9 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	err := godotenv.Load()
-	if err != nil {
-		slog.Error("Failed to load .env file", "error", err)
-		os.Exit(1)
-	}
+	godotenv.Load()
 
-	err = envconfig.Process("dunce", &config)
+	err := envconfig.Process("dunce", &config)
 	if err != nil {
 		slog.Error("Error loading config", "error", err)
 		os.Exit(1)

@@ -13,4 +13,4 @@ FROM gcr.io/distroless/static AS bot
 WORKDIR /bot
 COPY --from=builder /build/dunce /bot/dunce
 
-ENTRYPOINT ["/bot/dunce"]
+ENTRYPOINT ["/bot/dunce start --migrate"]
